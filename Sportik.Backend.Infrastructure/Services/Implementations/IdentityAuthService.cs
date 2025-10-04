@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Sportik.Backend.Application.DTOs.Auth;
+using Sportik.Backend.Application.Repositories.Interfaces;
 using Sportik.Backend.Application.Services.Interfaces;
 using Sportik.Backend.Domain.Entities;
 using Sportik.Backend.Infrastructure.Identity;
@@ -8,29 +9,21 @@ namespace Sportik.Backend.Infrastructure.Services.Implementations;
 
 internal sealed class IdentityAuthService : IAuthService
 {
-    private readonly IUsersService _usersService;
     private readonly SignInManager<ApplicationUser> _signInManager;
+    private readonly IUsersService _usersService;
+    private readonly ITokenService _tokenService;
+    private readonly IRefreshTokensRepository _refreshTokensRepository;
 
-    public IdentityAuthService(IUsersService usersService, SignInManager<ApplicationUser> signInManager)
+    public IdentityAuthService(SignInManager<ApplicationUser> signInManager, IUsersService usersService,
+        ITokenService tokenService, IRefreshTokensRepository refreshTokensRepository)
     {
-        _usersService = usersService;
         _signInManager = signInManager;
+        _usersService = usersService;
+        _tokenService = tokenService;
+        _refreshTokensRepository = refreshTokensRepository;
     }
 
-    public async Task<RegisterResultDto?> RegisterAsync(string email, string password)
-    {
-        User? existingUser = await _usersService.GetByEmailAsync(email);
-
-        if (existingUser != null)
-        {
-            return null;
-        }
-
-        User newUser = await _usersService.CreateAsync(email, password);
-        return new RegisterResultDto(newUser.Id);
-    }
-
-    public async Task<LoginResultDto?> LoginAsync(string email, string password)
+    public async Task<AuthResultDto?> LoginAsync(string email, string password)
     {
         SignInResult signInResult = await _signInManager.PasswordSignInAsync(email, password, isPersistent: false, lockoutOnFailure: false);
 
@@ -39,11 +32,52 @@ internal sealed class IdentityAuthService : IAuthService
             return null;
         }
 
-        return new LoginResultDto(
-            AccessToken: "dummy_access_token",
-            RefreshToken: "dummy_refresh_token",
+        User? user = await _usersService.GetByEmailAsync(email);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        AccessToken accessToken = _tokenService.GenerateAccessToken(user.Id, user.Email!);
+        RefreshToken refreshToken = _tokenService.GenerateRefreshToken(user.Id);
+
+        await _refreshTokensRepository.AddAsync(refreshToken);
+
+        return new AuthResultDto(
+            AccessToken: accessToken.Token,
+            RefreshToken: refreshToken.Token,
             TokenType: "Bearer",
-            ExpiresIn: 3600
+            ExpiresIn: (int)(accessToken.ExpiresAt - DateTimeOffset.UtcNow).TotalSeconds
+        );
+    }
+
+    public async Task<AuthResultDto?> RefreshAsync(string refreshToken)
+    {
+        RefreshToken? existingRefreshToken = await _refreshTokensRepository.GetByTokenAsync(refreshToken);
+
+        if (existingRefreshToken is not { IsActive: true })
+        {
+            return null;
+        }
+
+        User? user = await _usersService.GetByIdAsync(existingRefreshToken.UserId);
+
+        if (user == null)
+        {
+            return null;
+        }
+
+        AccessToken newAccessToken = _tokenService.GenerateAccessToken(user.Id, user.Email!);
+        RefreshToken newRefreshToken = _tokenService.GenerateRefreshToken(user.Id);
+
+        await _refreshTokensRepository.ReplaceAsync(existingRefreshToken, newRefreshToken);
+
+        return new AuthResultDto(
+            AccessToken: newAccessToken.Token,
+            RefreshToken: newRefreshToken.Token,
+            TokenType: "Bearer",
+            ExpiresIn: (int)(newAccessToken.ExpiresAt - DateTimeOffset.UtcNow).TotalSeconds
         );
     }
 }

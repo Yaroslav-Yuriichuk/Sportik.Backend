@@ -5,7 +5,7 @@ using Sportik.Backend.Application.DTOs.Version;
 namespace Sportik.Backend.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public sealed class VersionController : Controller
 {
     [HttpGet]

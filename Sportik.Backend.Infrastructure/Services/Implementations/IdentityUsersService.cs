@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Sportik.Backend.Application.Services.Interfaces;
+using Sportik.Backend.Domain.Common;
 using Sportik.Backend.Domain.Entities;
 using Sportik.Backend.Infrastructure.Identity;
+using Sportik.Backend.Infrastructure.Persistence.Mappers;
 
 namespace Sportik.Backend.Infrastructure.Services.Implementations;
 
@@ -17,16 +19,16 @@ internal sealed class IdentityUsersService : IUsersService
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         ApplicationUser? appUser = await _userManager.FindByIdAsync(id.ToString());
-        return appUser?.ToDomain();
+        return appUser is not null ? UserMapper.ToDomain(appUser) : null;
     }
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         ApplicationUser? appUser = await _userManager.FindByEmailAsync(email);
-        return appUser?.ToDomain();
+        return appUser is not null ? UserMapper.ToDomain(appUser) : null;
     }
 
-    public async Task<User> CreateAsync(string email, string password, CancellationToken cancellationToken = default)
+    public async Task<OperationResult<User>> CreateAsync(string email, string password, CancellationToken cancellationToken = default)
     {
         ApplicationUser appUser = new()
         {
@@ -40,9 +42,9 @@ internal sealed class IdentityUsersService : IUsersService
 
         if (!result.Succeeded)
         {
-            throw new InvalidOperationException("Failed to create user.");
+            return OperationResult<User>.Failure(result.Errors.Select(e => e.Description));
         }
 
-        return appUser.ToDomain();
+        return OperationResult<User>.Success(UserMapper.ToDomain(appUser));
     }
 }

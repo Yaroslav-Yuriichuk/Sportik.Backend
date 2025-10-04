@@ -5,7 +5,7 @@ using Sportik.Backend.Application.Services.Interfaces;
 namespace Sportik.Backend.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public sealed class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
@@ -15,27 +15,27 @@ public sealed class AuthController : ControllerBase
         _authService = authService;
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequest)
+    [HttpPost("login")]
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
     {
-        RegisterResultDto? result = await _authService.RegisterAsync(registerRequest.Email, registerRequest.Password);
+        AuthResultDto? result = await _authService.LoginAsync(loginRequest.Email, loginRequest.Password);
 
         if (result == null)
         {
-            return BadRequest("User with this email already exists.");
+            return Unauthorized("Invalid email or password.");
         }
 
         return Ok(result);
     }
 
-    [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
+    [HttpPost("refresh")]
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto refreshTokenRequest)
     {
-        LoginResultDto? result = await _authService.LoginAsync(loginRequest.Email, loginRequest.Password);
+        AuthResultDto? result = await _authService.RefreshAsync(refreshTokenRequest.RefreshToken);
 
         if (result == null)
         {
-            return Unauthorized("Invalid email or password.");
+            return Unauthorized("Invalid refresh token.");
         }
 
         return Ok(result);

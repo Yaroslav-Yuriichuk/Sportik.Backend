@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Sportik.Backend.Application.Repositories.Interfaces;
 using Sportik.Backend.Application.Services.Interfaces;
 using Sportik.Backend.Infrastructure.Identity;
 using Sportik.Backend.Infrastructure.Persistence;
+using Sportik.Backend.Infrastructure.Repositories.Implementations;
 using Sportik.Backend.Infrastructure.Services.Implementations;
 
 namespace Sportik.Backend.Infrastructure;
@@ -25,6 +27,9 @@ public static class DependencyInjection
                 options.Password.RequireUppercase = true;
             })
             .AddEntityFrameworkStores<AppDbContext>();
+
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IRefreshTokensRepository, RefreshTokensRepository>();
 
         services.AddScoped<IUsersService, IdentityUsersService>();
         services.AddScoped<IAuthService, IdentityAuthService>();
