@@ -30,32 +30,40 @@ internal sealed class RefreshTokensRepository : IRefreshTokensRepository
         return entity is null ? null : RefreshTokenMapper.ToDomain(entity, token);
     }
 
-    public async Task AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
+    public async Task<RefreshToken> AddAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
     {
-        string hash = _tokenService.HashToken(refreshToken.Token);
+        string token = refreshToken.Token;
+        string hash = _tokenService.HashToken(token);
+
         UserRefreshToken entity = RefreshTokenMapper.ToEntity(refreshToken, hash);
 
         await _dbContext.RefreshTokens.AddAsync(entity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return RefreshTokenMapper.ToDomain(entity, token);
     }
 
-    public async Task RevokeAsync(RefreshToken refreshToken, CancellationToken cancellationToken = default)
+    public async Task<RefreshToken?> RevokeAsync(string token, CancellationToken cancellationToken = default)
     {
-        string hash = _tokenService.HashToken(refreshToken.Token);
+        string hash = _tokenService.HashToken(token);
 
         UserRefreshToken? entity = await _dbContext.RefreshTokens
             .FirstOrDefaultAsync(t => t.Hash == hash, cancellationToken);
 
-        if (entity is not null)
+        if (entity is null)
         {
-            entity.RevokedAt = DateTimeOffset.UtcNow;
-            await _dbContext.SaveChangesAsync(cancellationToken);
+            return null;
         }
+
+        entity.RevokedAt = DateTimeOffset.UtcNow;
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return RefreshTokenMapper.ToDomain(entity, token);
     }
 
-    public async Task ReplaceAsync(RefreshToken oldRefreshToken, RefreshToken newRefreshToken, CancellationToken cancellationToken = default)
+    public async Task<RefreshToken> ReplaceAsync(string oldToken, RefreshToken newRefreshToken, CancellationToken cancellationToken = default)
     {
-        string oldHash = _tokenService.HashToken(oldRefreshToken.Token);
+        string oldHash = _tokenService.HashToken(oldToken);
 
         UserRefreshToken? oldEntity = await _dbContext.RefreshTokens
             .FirstOrDefaultAsync(t => t.Hash == oldHash, cancellationToken);
@@ -65,10 +73,14 @@ internal sealed class RefreshTokensRepository : IRefreshTokensRepository
             oldEntity.RevokedAt = DateTimeOffset.UtcNow;
         }
 
-        string newHash = _tokenService.HashToken(newRefreshToken.Token);
+        string newToken = newRefreshToken.Token;
+        string newHash = _tokenService.HashToken(newToken);
+
         UserRefreshToken newEntity = RefreshTokenMapper.ToEntity(newRefreshToken, newHash);
 
         await _dbContext.RefreshTokens.AddAsync(newEntity, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return RefreshTokenMapper.ToDomain(newEntity, newToken);
     }
 }

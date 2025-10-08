@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Sportik.Backend.Infrastructure.Identity;
 using Sportik.Backend.Infrastructure.Persistence.Entities;
@@ -12,4 +11,6 @@ internal sealed class AppDbContext : IdentityDbContext<ApplicationUser, Applicat
         : base(options) { }
 
     public DbSet<UserRefreshToken> RefreshTokens { get; set; } = null!;
+
+    public DbSet<UserExercise> Exercises { get; set; } = null!;
 }

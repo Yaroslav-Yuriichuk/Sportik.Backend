@@ -2,7 +2,7 @@
 
 public sealed class RefreshToken
 {
-    public Guid Id { get; init; } = Guid.NewGuid();
+    public Guid Id { get; init; }
 
     public Guid UserId { get; init; }
 
