@@ -19,12 +19,16 @@ internal sealed class IdentityUsersService : IUsersService
     public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
     {
         ApplicationUser? appUser = await _userManager.FindByIdAsync(id.ToString());
+        cancellationToken.ThrowIfCancellationRequested();
+
         return appUser is not null ? UserMapper.ToDomain(appUser) : null;
     }
 
     public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
     {
         ApplicationUser? appUser = await _userManager.FindByEmailAsync(email);
+        cancellationToken.ThrowIfCancellationRequested();
+
         return appUser is not null ? UserMapper.ToDomain(appUser) : null;
     }
 
@@ -39,6 +43,7 @@ internal sealed class IdentityUsersService : IUsersService
         };
 
         IdentityResult result = await _userManager.CreateAsync(appUser, password);
+        cancellationToken.ThrowIfCancellationRequested();
 
         if (!result.Succeeded)
         {

@@ -18,9 +18,9 @@ public sealed class UsersController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto, CancellationToken cancellationToken)
     {
-        OperationResult<User> result = await _usersService.CreateAsync(registerRequestDto.Email, registerRequestDto.Password);
+        OperationResult<User> result = await _usersService.CreateAsync(registerRequestDto.Email, registerRequestDto.Password, cancellationToken);
 
         if (!result.Succeeded)
         {

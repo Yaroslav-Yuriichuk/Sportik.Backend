@@ -19,9 +19,9 @@ public sealed class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDro)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDro, CancellationToken cancellationToken)
     {
-        OperationResult<AuthTokens> result = await _authService.LoginAsync(loginRequestDro.Email, loginRequestDro.Password);
+        OperationResult<AuthTokens> result = await _authService.LoginAsync(loginRequestDro.Email, loginRequestDro.Password, cancellationToken);
 
         if (!result.Succeeded)
         {
@@ -32,9 +32,9 @@ public sealed class AuthController : ControllerBase
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto refreshTokenRequestDto)
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto refreshTokenRequestDto, CancellationToken cancellationToken)
     {
-        OperationResult<AuthTokens> result = await _authService.RefreshAsync(refreshTokenRequestDto.RefreshToken);
+        OperationResult<AuthTokens> result = await _authService.RefreshAsync(refreshTokenRequestDto.RefreshToken, cancellationToken);
 
         if (!result.Succeeded)
         {
