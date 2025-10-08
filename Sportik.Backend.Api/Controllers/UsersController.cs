@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sportik.Backend.Application.DTOs.Auth;
+using Sportik.Backend.Api.DTOs.Users;
 using Sportik.Backend.Application.Services.Interfaces;
 using Sportik.Backend.Domain.Common;
 using Sportik.Backend.Domain.Entities;
@@ -18,15 +18,16 @@ public sealed class UsersController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequest)
+    public async Task<IActionResult> Register([FromBody] RegisterRequestDto registerRequestDto)
     {
-        OperationResult<User> result = await _usersService.CreateAsync(registerRequest.Email, registerRequest.Password);
+        OperationResult<User> result = await _usersService.CreateAsync(registerRequestDto.Email, registerRequestDto.Password);
 
         if (!result.Succeeded)
         {
-            return BadRequest(new { Errors = result.Errors });
+            return BadRequest(new { result.Errors });
         }
 
-        return Ok(result.Value);
+        User user = result.Value!;
+        return Ok(new RegisterResultDto(user.Id, user.Email!));
     }
 }

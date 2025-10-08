@@ -1,10 +1,11 @@
-﻿using Sportik.Backend.Application.DTOs.Auth;
+﻿using Sportik.Backend.Domain.Common;
+using Sportik.Backend.Domain.Entities;
 
 namespace Sportik.Backend.Application.Services.Interfaces;
 
 public interface IAuthService
 {
-    Task<AuthResultDto?> LoginAsync(string email, string password);
+    Task<OperationResult<AuthTokens>> LoginAsync(string email, string password);
 
-    Task<AuthResultDto?> RefreshAsync(string refreshToken);
+    Task<OperationResult<AuthTokens>> RefreshAsync(string refreshToken);
 }

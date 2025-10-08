@@ -12,7 +12,7 @@ namespace Sportik.Backend.Infrastructure;
 
 public static class DependencyInjection
 {
-    public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
+    public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddDbContext<AppDbContext>(options =>
         {
@@ -33,5 +33,9 @@ public static class DependencyInjection
 
         services.AddScoped<IUsersService, IdentityUsersService>();
         services.AddScoped<IAuthService, IdentityAuthService>();
+
+        services.AddScoped<IExercisesRepository, ExercisesRepository>();
+
+        return services;
     }
 }

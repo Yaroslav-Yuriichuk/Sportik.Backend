@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
 using Microsoft.AspNetCore.Mvc;
-using Sportik.Backend.Application.DTOs.Version;
+using Sportik.Backend.Api.DTOs.Version;
 
 namespace Sportik.Backend.Api.Controllers;
 

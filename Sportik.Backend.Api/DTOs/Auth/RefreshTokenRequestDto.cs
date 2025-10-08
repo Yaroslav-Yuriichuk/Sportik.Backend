@@ -1,3 +1,3 @@
-﻿namespace Sportik.Backend.Application.DTOs.Auth;
+﻿namespace Sportik.Backend.Api.DTOs.Auth;
 
 public sealed record RefreshTokenRequestDto(string RefreshToken);

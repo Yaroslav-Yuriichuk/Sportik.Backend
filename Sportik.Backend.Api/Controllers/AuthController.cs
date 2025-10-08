@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Sportik.Backend.Application.DTOs.Auth;
+using Sportik.Backend.Api.DTOs.Auth;
+using Sportik.Backend.Api.Mappers;
 using Sportik.Backend.Application.Services.Interfaces;
+using Sportik.Backend.Domain.Common;
+using Sportik.Backend.Domain.Entities;
 
 namespace Sportik.Backend.Api.Controllers;
 
@@ -16,28 +19,28 @@ public sealed class AuthController : ControllerBase
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequest)
+    public async Task<IActionResult> Login([FromBody] LoginRequestDto loginRequestDro)
     {
-        AuthResultDto? result = await _authService.LoginAsync(loginRequest.Email, loginRequest.Password);
+        OperationResult<AuthTokens> result = await _authService.LoginAsync(loginRequestDro.Email, loginRequestDro.Password);
 
-        if (result == null)
+        if (!result.Succeeded)
         {
-            return Unauthorized("Invalid email or password.");
+            return Unauthorized(new { result.Errors });
         }
 
-        return Ok(result);
+        return Ok(AuthTokensMapper.ToDto(result.Value!));
     }
 
     [HttpPost("refresh")]
-    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto refreshTokenRequest)
+    public async Task<IActionResult> Refresh([FromBody] RefreshTokenRequestDto refreshTokenRequestDto)
     {
-        AuthResultDto? result = await _authService.RefreshAsync(refreshTokenRequest.RefreshToken);
+        OperationResult<AuthTokens> result = await _authService.RefreshAsync(refreshTokenRequestDto.RefreshToken);
 
-        if (result == null)
+        if (!result.Succeeded)
         {
-            return Unauthorized("Invalid refresh token.");
+            return Unauthorized(new { result.Errors });
         }
 
-        return Ok(result);
+        return Ok(AuthTokensMapper.ToDto(result.Value!));
     }
 }
