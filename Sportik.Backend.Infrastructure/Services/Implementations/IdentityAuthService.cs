@@ -4,7 +4,7 @@ using Sportik.Backend.Application.Repositories.Interfaces;
 using Sportik.Backend.Application.Services.Interfaces;
 using Sportik.Backend.Domain.Common;
 using Sportik.Backend.Domain.Entities;
-using Sportik.Backend.Infrastructure.Identity;
+using Sportik.Backend.Infrastructure.Persistence.Entities.Identity;
 
 namespace Sportik.Backend.Infrastructure.Services.Implementations;
 
