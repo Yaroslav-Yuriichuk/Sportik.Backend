@@ -10,7 +10,8 @@ internal static class ExerciseMapper
         return new Exercise
         {
             Id = entity.Id,
-            Name = entity.Name
+            Name = entity.Name,
+            Settings = ExerciseSettingsMapper.ToDomain(entity.Settings),
         };
     }
 
@@ -20,7 +21,8 @@ internal static class ExerciseMapper
         {
             Id = domain.Id,
             Name = domain.Name,
-            UserId = userId
+            UserId = userId,
+            Settings = ExerciseSettingsMapper.ToEntity(domain.Settings),
         };
     }
 }

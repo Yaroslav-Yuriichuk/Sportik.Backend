@@ -1,4 +1,4 @@
-﻿using Sportik.Backend.Infrastructure.Identity;
+﻿using Sportik.Backend.Infrastructure.Persistence.Entities.Identity;
 
 namespace Sportik.Backend.Infrastructure.Persistence.Entities;
 
@@ -11,4 +11,6 @@ internal sealed class UserExercise
     public Guid UserId { get; init; }
 
     public ApplicationUser User { get; init; } = null!;
+
+    public UserExerciseSettings Settings { get; init; } = null!;
 }

@@ -16,26 +16,28 @@ internal sealed class ExercisesRepository : IExercisesRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Exercise>> GetUserExercisesAsync(Guid userId, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<Exercise>> GetAllAsync(Guid userId, CancellationToken cancellationToken = default)
     {
         List<UserExercise> entities = await _dbContext.Exercises
-            .Include(e => e.User)
+            .AsNoTracking()
+            .Include(e => e.Settings)
             .Where(e => e.UserId == userId)
             .ToListAsync(cancellationToken);
 
         return entities.Select(ExerciseMapper.ToDomain);
     }
 
-    public async Task<Exercise?> GetUserExerciseByIdAsync(Guid userId, Guid exerciseId, CancellationToken cancellationToken = default)
+    public async Task<Exercise?> GetByIdAsync(Guid userId, Guid exerciseId, CancellationToken cancellationToken = default)
     {
         UserExercise? entity = await _dbContext.Exercises
-            .Include(e => e.User)
+            .AsNoTracking()
+            .Include(e => e.Settings)
             .FirstOrDefaultAsync(e => e.UserId == userId && e.Id == exerciseId, cancellationToken);
 
         return entity is null ? null : ExerciseMapper.ToDomain(entity);
     }
 
-    public async Task<Exercise> AddUserExerciseAsync(Guid userId, Exercise exercise, CancellationToken cancellationToken = default)
+    public async Task<Exercise> AddAsync(Guid userId, Exercise exercise, CancellationToken cancellationToken = default)
     {
         UserExercise entity = ExerciseMapper.ToEntity(exercise, userId);
 
@@ -45,7 +47,7 @@ internal sealed class ExercisesRepository : IExercisesRepository
         return ExerciseMapper.ToDomain(entity);
     }
 
-    public async Task<Exercise?> DeleteUserExerciseAsync(Guid userId, Guid exerciseId, CancellationToken cancellationToken = default)
+    public async Task<Exercise?> DeleteAsync(Guid userId, Guid exerciseId, CancellationToken cancellationToken = default)
     {
         UserExercise? entity = await _dbContext.Exercises
             .FirstOrDefaultAsync(e => e.UserId == userId && e.Id == exerciseId, cancellationToken);

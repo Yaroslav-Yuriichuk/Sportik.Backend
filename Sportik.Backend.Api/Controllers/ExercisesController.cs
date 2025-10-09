@@ -35,9 +35,34 @@ public sealed class ExercisesController : ControllerBase
             return Unauthorized("Invalid or missing user ID claim.");
         }
 
-        IEnumerable<Exercise> exercises = await _exercisesService.GetUserExercisesAsync(userId, cancellationToken);
+        IEnumerable<Exercise> exercises = await _exercisesService.GetAllAsync(userId, cancellationToken);
 
         return Ok(exercises.Select(ExerciseMapper.ToDto));
+    }
+
+    [HttpGet("{exerciseId:guid}")]
+    public async Task<IActionResult> GetById([FromRoute] Guid exerciseId, CancellationToken cancellationToken)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        string? userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userIdValue) || !Guid.TryParse(userIdValue, out Guid userId))
+        {
+            return Unauthorized("Invalid or missing user ID claim.");
+        }
+
+        Exercise? exercise = await _exercisesService.GetByIdAsync(userId, exerciseId, cancellationToken);
+
+        if (exercise is null)
+        {
+            return NotFound("Exercise not found.");
+        }
+
+        return Ok(ExerciseMapper.ToDto(exercise));
     }
 
     [HttpPost]
@@ -55,8 +80,8 @@ public sealed class ExercisesController : ControllerBase
             return Unauthorized("Invalid or missing user ID claim.");
         }
 
-        Exercise exercise = new Exercise { Name = addExerciseDto.Name, };
-        exercise = await _exercisesService.AddUserExerciseAsync(userId, exercise, cancellationToken);
+        Exercise exercise = ExerciseMapper.ToDomain(addExerciseDto);
+        exercise = await _exercisesService.AddAsync(userId, exercise, cancellationToken);
 
         return Ok(ExerciseMapper.ToDto(exercise));
     }
@@ -76,7 +101,7 @@ public sealed class ExercisesController : ControllerBase
             return Unauthorized("Invalid or missing user ID claim.");
         }
 
-        Exercise? deletedExercise = await _exercisesService.DeleteUserExerciseAsync(userId, exerciseId, cancellationToken);
+        Exercise? deletedExercise = await _exercisesService.DeleteAsync(userId, exerciseId, cancellationToken);
 
         if (deletedExercise is null)
         {

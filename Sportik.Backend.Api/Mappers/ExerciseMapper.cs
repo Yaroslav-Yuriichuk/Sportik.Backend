@@ -9,7 +9,8 @@ internal static class ExerciseMapper
     {
         return new ExerciseDto(
             Id: exercise.Id,
-            Name: exercise.Name);
+            Name: exercise.Name,
+            Settings: ExerciseSettingsMapper.ToDto(exercise.Settings));
     }
 
     public static Exercise ToDomain(ExerciseDto dto)
@@ -17,7 +18,18 @@ internal static class ExerciseMapper
         return new Exercise
         {
             Id = dto.Id,
-            Name = dto.Name
+            Name = dto.Name,
+            Settings = ExerciseSettingsMapper.ToDomain(dto.Settings),
+        };
+    }
+
+    public static Exercise ToDomain(AddExerciseDto dto)
+    {
+        return new Exercise
+        {
+            Id = Guid.NewGuid(),
+            Name = dto.Name,
+            Settings = ExerciseSettingsMapper.ToDomain(dto.Settings),
         };
     }
 }
