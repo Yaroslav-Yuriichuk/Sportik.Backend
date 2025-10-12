@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Sportik.Backend.Application.Repositories.Interfaces;
@@ -35,6 +36,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, IdentityAuthService>();
 
         services.AddScoped<IExercisesRepository, ExercisesRepository>();
+        services.AddScoped<IExerciseSetsRepository, ExerciseSetsRepository>();
 
         return services;
     }

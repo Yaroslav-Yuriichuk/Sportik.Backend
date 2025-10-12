@@ -15,4 +15,6 @@ internal sealed class AppDbContext : IdentityDbContext<ApplicationUser, Applicat
     public DbSet<UserExercise> Exercises { get; set; } = null!;
 
     public DbSet<UserExerciseSettings> ExerciseSettings { get; set; } = null!;
+
+    public DbSet<UserSet> Sets { get; set; } = null!;
 }
