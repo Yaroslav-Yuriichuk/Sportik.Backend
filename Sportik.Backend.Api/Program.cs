@@ -14,6 +14,11 @@ string version = Assembly
     .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
     .InformationalVersion ?? "0.0.0";
 
+builder.WebHost.ConfigureKestrel(options =>
+{
+    options.Configure(builder.Configuration.GetSection("Kestrel"));
+});
+
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
