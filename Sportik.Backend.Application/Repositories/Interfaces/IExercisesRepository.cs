@@ -1,4 +1,4 @@
-﻿using Sportik.Backend.Domain.Entities;
+﻿using Sportik.Backend.Domain.Models;
 
 namespace Sportik.Backend.Application.Repositories.Interfaces;
 

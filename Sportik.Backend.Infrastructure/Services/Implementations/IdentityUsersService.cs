@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Sportik.Backend.Application.Services.Interfaces;
 using Sportik.Backend.Domain.Common;
-using Sportik.Backend.Domain.Entities;
+using Sportik.Backend.Domain.Models;
 using Sportik.Backend.Infrastructure.Persistence.Entities.Identity;
 using Sportik.Backend.Infrastructure.Persistence.Mappers;
 

@@ -1,4 +1,4 @@
-﻿namespace Sportik.Backend.Domain.Entities.Statistics;
+﻿namespace Sportik.Backend.Domain.Models.Statistics;
 
 public sealed class Set
 {

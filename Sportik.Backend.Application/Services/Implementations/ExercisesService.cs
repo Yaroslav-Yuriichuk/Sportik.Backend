@@ -1,6 +1,6 @@
 ﻿using Sportik.Backend.Application.Repositories.Interfaces;
 using Sportik.Backend.Application.Services.Interfaces;
-using Sportik.Backend.Domain.Entities;
+using Sportik.Backend.Domain.Models;
 
 namespace Sportik.Backend.Application.Services.Implementations;
 

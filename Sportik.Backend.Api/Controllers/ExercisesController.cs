@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Sportik.Backend.Api.DTOs.Exercises;
 using Sportik.Backend.Api.Mappers;
 using Sportik.Backend.Application.Services.Interfaces;
-using Sportik.Backend.Domain.Entities;
+using Sportik.Backend.Domain.Models;
 
 namespace Sportik.Backend.Api.Controllers;
 

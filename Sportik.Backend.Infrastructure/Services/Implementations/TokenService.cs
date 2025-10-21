@@ -5,7 +5,7 @@ using System.Text;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Sportik.Backend.Application.Services.Interfaces;
-using Sportik.Backend.Domain.Entities;
+using Sportik.Backend.Domain.Models;
 
 namespace Sportik.Backend.Infrastructure.Services.Implementations;
 

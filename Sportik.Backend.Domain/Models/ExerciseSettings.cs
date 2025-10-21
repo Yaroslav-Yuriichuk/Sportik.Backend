@@ -1,4 +1,4 @@
-﻿namespace Sportik.Backend.Domain.Entities;
+﻿namespace Sportik.Backend.Domain.Models;
 
 public sealed class ExerciseSettings
 {

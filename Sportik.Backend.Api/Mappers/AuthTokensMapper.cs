@@ -1,5 +1,5 @@
 ﻿using Sportik.Backend.Api.DTOs.Auth;
-using Sportik.Backend.Domain.Entities;
+using Sportik.Backend.Domain.Models;
 
 namespace Sportik.Backend.Api.Mappers;
 

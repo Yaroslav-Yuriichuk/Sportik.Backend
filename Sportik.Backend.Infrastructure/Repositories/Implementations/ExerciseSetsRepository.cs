@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Sportik.Backend.Application.Repositories.Interfaces;
-using Sportik.Backend.Domain.Entities.Statistics;
+using Sportik.Backend.Domain.Models.Statistics;
 using Sportik.Backend.Infrastructure.Persistence;
 using Sportik.Backend.Infrastructure.Persistence.Entities;
 using Sportik.Backend.Infrastructure.Persistence.Mappers;

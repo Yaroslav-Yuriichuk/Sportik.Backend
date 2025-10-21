@@ -5,7 +5,7 @@ using Sportik.Backend.Api.DTOs.Statistics;
 using Sportik.Backend.Api.Mappers.Statistics;
 using Sportik.Backend.Application.Services.Interfaces;
 using Sportik.Backend.Domain.Common;
-using Sportik.Backend.Domain.Entities.Statistics;
+using Sportik.Backend.Domain.Models.Statistics;
 
 namespace Sportik.Backend.Api.Controllers;
 

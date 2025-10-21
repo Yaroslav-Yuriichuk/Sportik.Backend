@@ -1,4 +1,4 @@
-﻿using Sportik.Backend.Domain.Entities.Statistics;
+﻿using Sportik.Backend.Domain.Models.Statistics;
 
 namespace Sportik.Backend.Application.Repositories.Interfaces;
 

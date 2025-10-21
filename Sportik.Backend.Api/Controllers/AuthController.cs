@@ -3,7 +3,7 @@ using Sportik.Backend.Api.DTOs.Auth;
 using Sportik.Backend.Api.Mappers;
 using Sportik.Backend.Application.Services.Interfaces;
 using Sportik.Backend.Domain.Common;
-using Sportik.Backend.Domain.Entities;
+using Sportik.Backend.Domain.Models;
 
 namespace Sportik.Backend.Api.Controllers;
 

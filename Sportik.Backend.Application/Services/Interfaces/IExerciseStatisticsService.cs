@@ -1,5 +1,5 @@
 ﻿using Sportik.Backend.Domain.Common;
-using Sportik.Backend.Domain.Entities.Statistics;
+using Sportik.Backend.Domain.Models.Statistics;
 
 namespace Sportik.Backend.Application.Services.Interfaces;
 
