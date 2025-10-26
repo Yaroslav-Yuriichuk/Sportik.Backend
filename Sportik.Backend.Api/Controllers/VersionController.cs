@@ -1,6 +1,6 @@
-﻿using System.Reflection;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Sportik.Backend.Api.DTOs.Version;
+using Sportik.Backend.Api.Helpers;
 
 namespace Sportik.Backend.Api.Controllers;
 
@@ -11,11 +11,7 @@ public sealed class VersionController : Controller
     [HttpGet]
     public ActionResult<VersionDto> Get()
     {
-        string version = Assembly
-            .GetExecutingAssembly()
-            .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-            .InformationalVersion ?? "0.0.0";
-
+        string version = VersionHelper.GetVersion();
         return Ok(new VersionDto(version));
     }
 }

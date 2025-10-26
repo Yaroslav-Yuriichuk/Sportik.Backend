@@ -3,16 +3,14 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Sportik.Backend.Api.Helpers;
 using Sportik.Backend.Application;
 using Sportik.Backend.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
 var configuration = builder.Configuration;
 
-string version = Assembly
-    .GetExecutingAssembly()
-    .GetCustomAttribute<AssemblyInformationalVersionAttribute>()?
-    .InformationalVersion ?? "0.0.0";
+string version = VersionHelper.GetVersion();
 
 builder.WebHost.ConfigureKestrel(options =>
 {
