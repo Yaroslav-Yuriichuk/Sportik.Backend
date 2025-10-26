@@ -15,13 +15,14 @@ internal sealed class ExerciseStatisticsService : IExerciseStatisticsService
         _exerciseSetsRepository = exerciseSetsRepository;
     }
 
-    public async Task<IEnumerable<WeekStatistics>> GetAllAsync(Guid userId, WeekStatisticsOrder order, CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<WeekStatistics>> GetAllAsync(Guid userId, WeekStatisticsOrder order, TimeSpan offset,
+        CancellationToken cancellationToken = default)
     {
         IEnumerable<Set> sets = await _exerciseSetsRepository.GetAllAsync(userId, cancellationToken);
 
         IEnumerable<DayStatistics> dayStatistics = sets
             .OrderBy(set => set.LoggedAt)
-            .GroupBy(set => set.LoggedAt.Date)
+            .GroupBy(set => set.LoggedAt.ToOffset(offset).Date)
             .Select(group =>
             {
                 DateTime date = group.Key;

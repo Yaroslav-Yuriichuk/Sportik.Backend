@@ -19,7 +19,7 @@ internal static class SetMapper
         {
             Id = Guid.NewGuid(),
             Repetitions = dto.Repetitions,
-            LoggedAt = dto.CreatedAt,
+            LoggedAt = dto.LoggedAt,
             ExerciseId = dto.ExerciseId,
         };
     }
