@@ -1,5 +1,6 @@
 ﻿using Sportik.Backend.Api.DTOs.Exercises;
 using Sportik.Backend.Domain.Models;
+using Sportik.Backend.Domain.Models.Settings;
 
 namespace Sportik.Backend.Api.Mappers;
 

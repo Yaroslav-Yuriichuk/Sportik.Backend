@@ -30,7 +30,7 @@ internal sealed class ExerciseSetsRepository : IExerciseSetsRepository
     {
         UserExercise? exerciseEntity = await _dbContext.Exercises
             .AsNoTracking()
-            .FirstOrDefaultAsync(e => e.Id == set.ExerciseId, cancellationToken);
+            .FirstOrDefaultAsync(e => e.UserId == userId && e.Id == set.ExerciseId, cancellationToken);
 
         if (exerciseEntity is null)
         {

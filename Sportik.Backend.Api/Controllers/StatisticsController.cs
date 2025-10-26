@@ -43,7 +43,7 @@ public sealed class StatisticsController : ControllerBase
     }
 
     [HttpPost("sets")]
-    public async Task<IActionResult> Add(AddSetDto addSetDto, CancellationToken cancellationToken)
+    public async Task<IActionResult> Add([FromBody] AddSetDto addSetDto, CancellationToken cancellationToken)
     {
         if (!User.Identity?.IsAuthenticated ?? true)
         {

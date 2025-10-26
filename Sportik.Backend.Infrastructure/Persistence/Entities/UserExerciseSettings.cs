@@ -4,9 +4,9 @@ internal sealed class UserExerciseSettings
 {
     public Guid Id { get; init; } = Guid.NewGuid();
 
-    public int TargetRepetitions { get; init; }
+    public int TargetRepetitions { get; set; }
 
-    public TimeSpan TimeBetweenSets { get; init; }
+    public TimeSpan TimeBetweenSets { get; set; }
 
-    public TimeSpan ExecutionTime { get; init; }
+    public TimeSpan ExecutionTime { get; set; }
 }
