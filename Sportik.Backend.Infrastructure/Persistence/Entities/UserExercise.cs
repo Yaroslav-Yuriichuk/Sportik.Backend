@@ -10,6 +10,8 @@ internal sealed class UserExercise
 
     public Guid UserId { get; init; }
 
+    public Guid SettingsId { get; init; }
+
     public ApplicationUser User { get; init; } = null!;
 
     public UserExerciseSettings Settings { get; init; } = null!;

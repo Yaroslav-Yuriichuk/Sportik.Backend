@@ -1,4 +1,6 @@
-﻿namespace Sportik.Backend.Domain.Models;
+﻿using Sportik.Backend.Domain.Models.Settings;
+
+namespace Sportik.Backend.Domain.Models;
 
 public sealed class Exercise
 {

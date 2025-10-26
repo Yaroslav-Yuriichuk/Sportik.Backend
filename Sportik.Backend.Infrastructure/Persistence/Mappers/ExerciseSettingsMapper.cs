@@ -1,4 +1,5 @@
 ﻿using Sportik.Backend.Domain.Models;
+using Sportik.Backend.Domain.Models.Settings;
 using Sportik.Backend.Infrastructure.Persistence.Entities;
 
 namespace Sportik.Backend.Infrastructure.Persistence.Mappers;

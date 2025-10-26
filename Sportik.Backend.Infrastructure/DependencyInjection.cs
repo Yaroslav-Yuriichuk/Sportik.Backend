@@ -36,6 +36,7 @@ public static class DependencyInjection
         services.AddScoped<IAuthService, IdentityAuthService>();
 
         services.AddScoped<IExercisesRepository, ExercisesRepository>();
+        services.AddScoped<IExerciseSettingsRepository, ExerciseSettingsRepository>();
         services.AddScoped<IExerciseSetsRepository, ExerciseSetsRepository>();
 
         return services;
