@@ -12,17 +12,18 @@ namespace Sportik.Backend.Api.Controllers;
 [ApiController]
 [Route("api/[controller]")]
 [Authorize]
-public sealed class StatisticsController : ControllerBase
+public sealed class ExerciseStatisticsController : ControllerBase
 {
     private readonly IExerciseStatisticsService _exerciseStatisticsService;
 
-    public StatisticsController(IExerciseStatisticsService exerciseStatisticsService)
+    public ExerciseStatisticsController(IExerciseStatisticsService exerciseStatisticsService)
     {
         _exerciseStatisticsService = exerciseStatisticsService;
     }
 
     [HttpGet("weekly")]
-    public async Task<IActionResult> GetWeekly(CancellationToken cancellationToken)
+    public async Task<IActionResult> GetWeekly([FromQuery] WeekStatisticsOrder order, [FromQuery] TimeSpan offset,
+        CancellationToken cancellationToken)
     {
         if (!User.Identity?.IsAuthenticated ?? true)
         {
@@ -37,7 +38,7 @@ public sealed class StatisticsController : ControllerBase
         }
 
         IEnumerable<WeekStatistics> statistics =
-            await _exerciseStatisticsService.GetAllAsync(userId, WeekStatisticsOrder.Descending, cancellationToken);
+            await _exerciseStatisticsService.GetAllAsync(userId, order, offset, cancellationToken);
 
         return Ok(statistics.Select(WeekStatisticsMapper.ToDto));
     }
