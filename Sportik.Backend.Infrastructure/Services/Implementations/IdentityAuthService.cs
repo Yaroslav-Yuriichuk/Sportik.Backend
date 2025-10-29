@@ -84,4 +84,18 @@ internal sealed class IdentityAuthService : IAuthService
             ExpiresIn = (int)(newAccessToken.ExpiresAt - DateTimeOffset.UtcNow).TotalSeconds,
         });
     }
+
+    public async Task<OperationResult> RevokeAsync(string refreshToken, CancellationToken cancellationToken = default)
+    {
+        RefreshToken? existingRefreshToken = await _refreshTokensRepository.GetByTokenAsync(refreshToken, cancellationToken);
+
+        if (existingRefreshToken is not { IsActive: true })
+        {
+            return OperationResult.Failure(new[] { "Invalid refresh token." });
+        }
+
+        await _refreshTokensRepository.RevokeAsync(refreshToken, cancellationToken);
+
+        return OperationResult.Success();
+    }
 }
