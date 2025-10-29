@@ -43,4 +43,17 @@ public sealed class AuthController : ControllerBase
 
         return Ok(AuthTokensMapper.ToDto(result.Value!));
     }
+
+    [HttpPost("revoke")]
+    public async Task<IActionResult> Revoke([FromBody] RevokeTokenRequestDto revokeTokenRequestDto, CancellationToken cancellationToken)
+    {
+        OperationResult result = await _authService.RevokeAsync(revokeTokenRequestDto.RefreshToken, cancellationToken);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(new { result.Errors });
+        }
+
+        return Ok();
+    }
 }
