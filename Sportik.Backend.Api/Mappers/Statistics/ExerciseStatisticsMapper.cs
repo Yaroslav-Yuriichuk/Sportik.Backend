@@ -8,7 +8,7 @@ internal static class ExerciseStatisticsMapper
     public static ExerciseStatisticsDto ToDto(ExerciseStatistics domain)
     {
         return new ExerciseStatisticsDto(
-            ExerciseId: domain.ExerciseId,
+            Exercise: ExerciseMapper.ToDto(domain.Exercise),
             Sets: domain.Sets.Select(SetMapper.ToDto).ToList());
     }
 }

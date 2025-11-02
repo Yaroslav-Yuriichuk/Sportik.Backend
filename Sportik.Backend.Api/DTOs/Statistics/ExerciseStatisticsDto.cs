@@ -1,3 +1,5 @@
-﻿namespace Sportik.Backend.Api.DTOs.Statistics;
+﻿using Sportik.Backend.Api.DTOs.Exercises;
 
-internal sealed record ExerciseStatisticsDto(Guid ExerciseId, List<SetDto> Sets);
+namespace Sportik.Backend.Api.DTOs.Statistics;
+
+internal sealed record ExerciseStatisticsDto(ExerciseDto Exercise, List<SetDto> Sets);

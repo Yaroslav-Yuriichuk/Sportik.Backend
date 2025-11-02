@@ -9,36 +9,25 @@ namespace Sportik.Backend.Application.Services.Implementations;
 internal sealed class ExerciseStatisticsService : IExerciseStatisticsService
 {
     private readonly IExerciseSetsRepository _exerciseSetsRepository;
+    private readonly IExerciseStatisticsRepository _exerciseStatisticsRepository;
 
-    public ExerciseStatisticsService(IExerciseSetsRepository exerciseSetsRepository)
+    public ExerciseStatisticsService(IExerciseSetsRepository exerciseSetsRepository, IExerciseStatisticsRepository exerciseStatisticsRepository)
     {
         _exerciseSetsRepository = exerciseSetsRepository;
+        _exerciseStatisticsRepository = exerciseStatisticsRepository;
     }
 
     public async Task<IEnumerable<WeekStatistics>> GetAllAsync(Guid userId, WeekStatisticsOrder order, TimeSpan offset,
         CancellationToken cancellationToken = default)
     {
-        IEnumerable<Set> sets = await _exerciseSetsRepository.GetAllAsync(userId, cancellationToken);
+        IEnumerable<IGrouping<DateTime, ExerciseStatistics>> groupedStatistics = await _exerciseStatisticsRepository
+            .GetAllAsync(userId, set => set.LoggedAt.ToOffset(offset).Date, cancellationToken);
 
-        IEnumerable<DayStatistics> dayStatistics = sets
-            .OrderBy(set => set.LoggedAt)
-            .GroupBy(set => set.LoggedAt.ToOffset(offset).Date)
-            .Select(group =>
+        IEnumerable<DayStatistics> dayStatistics = groupedStatistics
+            .Select(group => new DayStatistics
             {
-                DateTime date = group.Key;
-
-                return new DayStatistics
-                {
-                    Date = date,
-                    ExerciseStatistics = group
-                        .GroupBy(set => set.ExerciseId)
-                        .Select(g => new ExerciseStatistics
-                        {
-                            ExerciseId = g.Key,
-                            Sets = g.ToList(),
-                        })
-                        .ToList(),
-                };
+                Date = group.Key,
+                ExerciseStatistics = group.ToList(),
             });
 
         dayStatistics = order switch

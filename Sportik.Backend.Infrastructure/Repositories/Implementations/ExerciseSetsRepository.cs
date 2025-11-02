@@ -16,16 +16,6 @@ internal sealed class ExerciseSetsRepository : IExerciseSetsRepository
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<Set>> GetAllAsync(Guid userId, CancellationToken cancellationToken = default)
-    {
-        List<UserSet> setEntities = await _dbContext.Sets
-            .AsNoTracking()
-            .Where(s => s.UserId == userId)
-            .ToListAsync(cancellationToken);
-
-        return setEntities.Select(SetMapper.ToDomain);
-    }
-
     public async Task<Set?> AddAsync(Guid userId, Set set, CancellationToken cancellationToken = default)
     {
         UserExercise? exerciseEntity = await _dbContext.Exercises

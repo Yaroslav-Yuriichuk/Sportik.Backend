@@ -2,7 +2,7 @@
 
 public sealed class ExerciseStatistics
 {
-    public Guid ExerciseId { get; init; }
+    public Exercise Exercise { get; init; } = new();
 
     public List<Set> Sets { get; init; } = new();
 }
