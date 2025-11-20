@@ -1,6 +1,6 @@
 ## Overview
 
-Sportik Backend is a backend application to create reminders for exercises and track the progress.
+A backend service for the Sportik application that handles and processes all API requests.
 
 ## Build
 
