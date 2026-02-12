@@ -22,7 +22,7 @@ internal static class SetMapper
         {
             Id = domain.Id,
             Repetitions = domain.Repetitions,
-            LoggedAt = domain.LoggedAt,
+            LoggedAt = domain.LoggedAt.ToUniversalTime(),
             UserId = userId,
             ExerciseId = domain.ExerciseId,
         };

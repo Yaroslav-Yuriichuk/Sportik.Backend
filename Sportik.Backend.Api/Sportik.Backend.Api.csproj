@@ -21,4 +21,8 @@
       <ProjectReference Include="..\Sportik.Backend.Infrastructure\Sportik.Backend.Infrastructure.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Certs\" />
+    </ItemGroup>
+
 </Project>
