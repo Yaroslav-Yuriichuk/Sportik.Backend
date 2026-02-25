@@ -1,0 +1,13 @@
+﻿services:
+
+  backend:
+    image: yyuriichuk/sportik-backend:1.0.1
+    container_name: sportik-backend
+    restart: unless-stopped
+    ports:
+      - "5000:5000"
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${ENVIRONMENT}
+      ASPNETCORE_URLS: ${URLS}
+      ConnectionStrings__DefaultConnection: ${DATABASE_CONNECTION}
+      Jwt__Secret: ${JWT_SECRET}
