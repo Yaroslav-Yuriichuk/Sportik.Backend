@@ -10,5 +10,7 @@ public interface IExercisesRepository
 
     Task<Exercise> AddAsync(Guid userId, Exercise exercise, CancellationToken cancellationToken = default);
 
+    Task<IEnumerable<Exercise>> AddRangeAsync(Guid userId, IEnumerable<Exercise> exercises, CancellationToken cancellationToken = default);
+
     Task<Exercise?> DeleteAsync(Guid userId, Guid exerciseId, CancellationToken cancellationToken = default);
 }

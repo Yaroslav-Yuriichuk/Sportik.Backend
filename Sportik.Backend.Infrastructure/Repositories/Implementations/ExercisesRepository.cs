@@ -47,6 +47,16 @@ internal sealed class ExercisesRepository : IExercisesRepository
         return ExerciseMapper.ToDomain(entity);
     }
 
+    public async Task<IEnumerable<Exercise>> AddRangeAsync(Guid userId, IEnumerable<Exercise> exercises, CancellationToken cancellationToken = default)
+    {
+        List<UserExercise> entities = exercises.Select(e => ExerciseMapper.ToEntity(e, userId)).ToList();
+
+        await _dbContext.Exercises.AddRangeAsync(entities, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return entities.Select(ExerciseMapper.ToDomain);
+    }
+
     public async Task<Exercise?> DeleteAsync(Guid userId, Guid exerciseId, CancellationToken cancellationToken = default)
     {
         UserExercise? entity = await _dbContext.Exercises
