@@ -28,6 +28,11 @@ internal sealed class ExercisesService : IExercisesService
         return await _exercisesRepository.AddAsync(userId, exercise, cancellationToken);
     }
 
+    public async Task<IEnumerable<Exercise>> AddRangeAsync(Guid userId, IEnumerable<Exercise> exercises, CancellationToken cancellationToken = default)
+    {
+        return await _exercisesRepository.AddRangeAsync(userId, exercises, cancellationToken);
+    }
+
     public async Task<Exercise?> DeleteAsync(Guid userId, Guid exerciseId, CancellationToken cancellationToken = default)
     {
         return await _exercisesRepository.DeleteAsync(userId, exerciseId, cancellationToken);

@@ -27,7 +27,7 @@ internal static class ExerciseMapper
     {
         return new Exercise
         {
-            Id = Guid.NewGuid(),
+            Id = dto.Id ?? Guid.NewGuid(),
             Name = dto.Name,
             Settings = ExerciseSettingsMapper.ToDomain(dto.Settings),
         };

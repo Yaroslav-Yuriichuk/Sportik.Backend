@@ -86,6 +86,27 @@ public sealed class ExercisesController : ControllerBase
         return Ok(ExerciseMapper.ToDto(exercise));
     }
 
+    [HttpPost("batch")]
+    public async Task<IActionResult> PostBatch([FromBody] IEnumerable<AddExerciseDto> addExerciseDtos, CancellationToken cancellationToken)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        string? userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userIdValue) || !Guid.TryParse(userIdValue, out Guid userId))
+        {
+            return Unauthorized("Invalid or missing user ID claim.");
+        }
+
+        IEnumerable<Exercise> exercises = addExerciseDtos.Select(ExerciseMapper.ToDomain);
+        exercises = await _exercisesService.AddRangeAsync(userId, exercises, cancellationToken);
+
+        return Ok(exercises.Select(ExerciseMapper.ToDto));
+    }
+
     [HttpDelete("{exerciseId:guid}")]
     public async Task<IActionResult> Delete([FromRoute] Guid exerciseId, CancellationToken cancellationToken)
     {
