@@ -1,8 +1,12 @@
-﻿using Sportik.Backend.Domain.Models.Settings;
+﻿using Sportik.Backend.Domain.Models;
+using Sportik.Backend.Domain.Models.Settings;
 
 namespace Sportik.Backend.Application.Repositories.Interfaces;
 
 public interface IExerciseSettingsRepository
 {
-    Task<ExerciseSettings?> UpdateAsync(Guid userId, ExerciseSettingsDelta delta, Guid exerciseId, CancellationToken cancellationToken = default);
+    Task<Exercise?> UpdateAsync(Guid userId, UpdateExerciseSettingModel updateModel, CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<Exercise>> UpdateRangeAsync(Guid userId, IEnumerable<UpdateExerciseSettingModel> updateModels,
+        CancellationToken cancellationToken = default);
 }
