@@ -43,6 +43,26 @@ public sealed class ExerciseStatisticsController : ControllerBase
         return Ok(statistics.Select(WeekStatisticsMapper.ToDto));
     }
 
+    [HttpGet("sets")]
+    public async Task<IActionResult> GetSets(CancellationToken cancellationToken)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        string? userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userIdValue) || !Guid.TryParse(userIdValue, out Guid userId))
+        {
+            return Unauthorized("Invalid or missing user ID claim.");
+        }
+
+        IEnumerable<Set> sets = await _exerciseStatisticsService.GetAllAsync(userId, cancellationToken);
+
+        return Ok(sets.Select(SetMapper.ToDto));
+    }
+
     [HttpPost("sets")]
     public async Task<IActionResult> Add([FromBody] AddSetDto addSetDto, CancellationToken cancellationToken)
     {
@@ -59,7 +79,7 @@ public sealed class ExerciseStatisticsController : ControllerBase
         }
 
         Set set = SetMapper.ToDomain(addSetDto);
-        Set? addedSet = await _exerciseStatisticsService.AddSetAsync(userId, set, cancellationToken);
+        Set? addedSet = await _exerciseStatisticsService.AddAsync(userId, set, cancellationToken);
 
         if (addedSet is null)
         {
