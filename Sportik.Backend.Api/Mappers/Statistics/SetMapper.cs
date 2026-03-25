@@ -17,7 +17,7 @@ internal static class SetMapper
     {
         return new Set
         {
-            Id = Guid.NewGuid(),
+            Id = dto.Id ?? Guid.NewGuid(),
             Repetitions = dto.Repetitions,
             LoggedAt = dto.LoggedAt,
             ExerciseId = dto.ExerciseId,
