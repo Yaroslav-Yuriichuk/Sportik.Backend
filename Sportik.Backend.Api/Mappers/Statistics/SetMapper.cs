@@ -10,14 +10,15 @@ internal static class SetMapper
         return new SetDto(
             Id: domain.Id,
             Repetitions: domain.Repetitions,
-            LoggedAt: domain.LoggedAt);
+            LoggedAt: domain.LoggedAt,
+            ExerciseId: domain.ExerciseId);
     }
 
     public static Set ToDomain(AddSetDto dto)
     {
         return new Set
         {
-            Id = Guid.NewGuid(),
+            Id = dto.Id ?? Guid.NewGuid(),
             Repetitions = dto.Repetitions,
             LoggedAt = dto.LoggedAt,
             ExerciseId = dto.ExerciseId,

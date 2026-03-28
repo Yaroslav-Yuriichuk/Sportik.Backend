@@ -17,6 +17,11 @@ internal sealed class ExerciseStatisticsService : IExerciseStatisticsService
         _exerciseStatisticsRepository = exerciseStatisticsRepository;
     }
 
+    public async Task<IEnumerable<Set>> GetAllAsync(Guid userId, CancellationToken cancellationToken = default)
+    {
+        return await _exerciseSetsRepository.GetAllAsync(userId, cancellationToken);
+    }
+
     public async Task<IEnumerable<WeekStatistics>> GetAllAsync(Guid userId, WeekStatisticsOrder order, TimeSpan offset,
         CancellationToken cancellationToken = default)
     {
@@ -52,8 +57,13 @@ internal sealed class ExerciseStatisticsService : IExerciseStatisticsService
         };
     }
 
-    public async Task<Set?> AddSetAsync(Guid userId, Set set, CancellationToken cancellationToken = default)
+    public async Task<Set?> AddAsync(Guid userId, Set set, CancellationToken cancellationToken = default)
     {
         return await _exerciseSetsRepository.AddAsync(userId, set, cancellationToken);
+    }
+
+    public async Task<IEnumerable<Set>> AddRangeAsync(Guid userId, IEnumerable<Set> sets, CancellationToken cancellationToken = default)
+    {
+        return await _exerciseSetsRepository.AddRangeAsync(userId, sets, cancellationToken);
     }
 }
