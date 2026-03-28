@@ -28,11 +28,11 @@ internal sealed class ExerciseSetsRepository : IExerciseSetsRepository
 
     public async Task<Set?> AddAsync(Guid userId, Set set, CancellationToken cancellationToken = default)
     {
-        UserExercise? exerciseEntity = await _dbContext.Exercises
+        bool hasExercise = await _dbContext.Exercises
             .AsNoTracking()
-            .FirstOrDefaultAsync(e => e.UserId == userId && e.Id == set.ExerciseId, cancellationToken);
+            .AnyAsync(e => e.UserId == userId && e.Id == set.ExerciseId, cancellationToken);
 
-        if (exerciseEntity is null)
+        if (!hasExercise)
         {
             return null;
         }
@@ -43,5 +43,36 @@ internal sealed class ExerciseSetsRepository : IExerciseSetsRepository
         await _dbContext.SaveChangesAsync(cancellationToken);
 
         return SetMapper.ToDomain(setEntity);
+    }
+
+    public async Task<IEnumerable<Set>> AddRangeAsync(Guid userId, IEnumerable<Set> sets, CancellationToken cancellationToken = default)
+    {
+        sets = sets as IList<Set> ?? sets.ToList();
+        List<Guid> exerciseIds = sets.Select(s => s.ExerciseId).Distinct().ToList();
+
+        HashSet<Guid> existingExerciseIds = (await _dbContext.Exercises
+                .AsNoTracking()
+                .Where(e => e.UserId == userId && exerciseIds.Contains(e.Id))
+                .Select(e => e.Id)
+                .ToListAsync(cancellationToken))
+            .ToHashSet();
+
+        List<UserSet> setEntities = new List<UserSet>();
+
+        foreach (Set set in sets)
+        {
+            if (!existingExerciseIds.Contains(set.ExerciseId))
+            {
+                continue;
+            }
+
+            UserSet setEntity = SetMapper.ToEntity(set, userId);
+            setEntities.Add(setEntity);
+        }
+
+        await _dbContext.Sets.AddRangeAsync(setEntities, cancellationToken);
+        await _dbContext.SaveChangesAsync(cancellationToken);
+
+        return setEntities.Select(SetMapper.ToDomain);
     }
 }

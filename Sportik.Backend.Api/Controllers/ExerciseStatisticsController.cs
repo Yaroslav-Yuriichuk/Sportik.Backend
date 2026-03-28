@@ -88,4 +88,25 @@ public sealed class ExerciseStatisticsController : ControllerBase
 
         return Ok(SetMapper.ToDto(addedSet));
     }
+
+    [HttpPost("sets/batch")]
+    public async Task<IActionResult> AddBatch([FromBody] IEnumerable<AddSetDto> addSetDtos, CancellationToken cancellationToken)
+    {
+        if (!User.Identity?.IsAuthenticated ?? true)
+        {
+            return Unauthorized("User is not authenticated.");
+        }
+
+        string? userIdValue = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        if (string.IsNullOrWhiteSpace(userIdValue) || !Guid.TryParse(userIdValue, out Guid userId))
+        {
+            return Unauthorized("Invalid or missing user ID claim.");
+        }
+
+        IEnumerable<Set> sets = addSetDtos.Select(SetMapper.ToDomain);
+        IEnumerable<Set> addedSets = await _exerciseStatisticsService.AddRangeAsync(userId, sets, cancellationToken);
+
+        return Ok(addedSets.Select(SetMapper.ToDto));
+    }
 }

@@ -61,4 +61,9 @@ internal sealed class ExerciseStatisticsService : IExerciseStatisticsService
     {
         return await _exerciseSetsRepository.AddAsync(userId, set, cancellationToken);
     }
+
+    public async Task<IEnumerable<Set>> AddRangeAsync(Guid userId, IEnumerable<Set> sets, CancellationToken cancellationToken = default)
+    {
+        return await _exerciseSetsRepository.AddRangeAsync(userId, sets, cancellationToken);
+    }
 }

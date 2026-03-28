@@ -11,4 +11,6 @@ public interface IExerciseStatisticsService
         CancellationToken cancellationToken = default);
 
     Task<Set?> AddAsync(Guid userId, Set set, CancellationToken cancellationToken = default);
+
+    Task<IEnumerable<Set>> AddRangeAsync(Guid userId, IEnumerable<Set> sets, CancellationToken cancellationToken = default);
 }

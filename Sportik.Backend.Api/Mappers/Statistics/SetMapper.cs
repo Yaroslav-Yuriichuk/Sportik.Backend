@@ -10,7 +10,8 @@ internal static class SetMapper
         return new SetDto(
             Id: domain.Id,
             Repetitions: domain.Repetitions,
-            LoggedAt: domain.LoggedAt);
+            LoggedAt: domain.LoggedAt,
+            ExerciseId: domain.ExerciseId);
     }
 
     public static Set ToDomain(AddSetDto dto)
