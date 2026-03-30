@@ -23,7 +23,7 @@ internal sealed class ExerciseSetsRepository : IExerciseSetsRepository
             .Where(s => s.UserId == userId)
             .ToListAsync(cancellationToken);
 
-        return setEntities.Select(SetMapper.ToDomain);
+        return setEntities.Select(s => SetMapper.ToDomain(s));
     }
 
     public async Task<Set?> AddAsync(Guid userId, Set set, CancellationToken cancellationToken = default)
@@ -73,6 +73,6 @@ internal sealed class ExerciseSetsRepository : IExerciseSetsRepository
         await _dbContext.Sets.AddRangeAsync(setEntities, cancellationToken);
         await _dbContext.SaveChangesAsync(cancellationToken);
 
-        return setEntities.Select(SetMapper.ToDomain);
+        return setEntities.Select(s => SetMapper.ToDomain(s));
     }
 }

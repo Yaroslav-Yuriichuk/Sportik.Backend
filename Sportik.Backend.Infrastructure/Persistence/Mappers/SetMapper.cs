@@ -5,13 +5,13 @@ namespace Sportik.Backend.Infrastructure.Persistence.Mappers;
 
 internal static class SetMapper
 {
-    public static Set ToDomain(UserSet entity)
+    public static Set ToDomain(UserSet entity, TimeSpan? offset = null)
     {
         return new Set
         {
             Id = entity.Id,
             Repetitions = entity.Repetitions,
-            LoggedAt = entity.LoggedAt,
+            LoggedAt = offset != null ? entity.LoggedAt.ToOffset(offset.Value) : entity.LoggedAt,
             ExerciseId = entity.ExerciseId,
         };
     }

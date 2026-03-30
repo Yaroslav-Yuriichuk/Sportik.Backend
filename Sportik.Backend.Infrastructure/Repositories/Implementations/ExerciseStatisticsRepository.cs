@@ -17,8 +17,8 @@ internal sealed class ExerciseStatisticsRepository : IExerciseStatisticsReposito
         _dbContext = dbContext;
     }
 
-    public async Task<IEnumerable<IGrouping<TKey, ExerciseStatistics>>> GetAllAsync<TKey>(Guid userId, Func<Set, TKey> key,
-        CancellationToken cancellationToken = default)
+    public async Task<IEnumerable<IGrouping<TKey, ExerciseStatistics>>> GetAllAsync<TKey>(Guid userId, TimeSpan offset,
+        Func<Set, TKey> key, CancellationToken cancellationToken = default)
     {
         IEnumerable<UserSet> sets = await _dbContext.Sets
             .AsNoTracking()
@@ -29,7 +29,7 @@ internal sealed class ExerciseStatisticsRepository : IExerciseStatisticsReposito
 
         return sets
             .OrderBy(s => s.LoggedAt)
-            .GroupBy(s => key(SetMapper.ToDomain(s)))
+            .GroupBy(s => key(SetMapper.ToDomain(s, offset)))
             .Select(group =>
             {
                 TKey groupKey = group.Key;
@@ -40,7 +40,7 @@ internal sealed class ExerciseStatisticsRepository : IExerciseStatisticsReposito
                     {
                         Exercise = ExerciseMapper.ToDomain(g.First().Exercise),
                         Sets = g
-                            .Select(SetMapper.ToDomain)
+                            .Select(s => SetMapper.ToDomain(s, offset))
                             .ToList(),
                     });
 
