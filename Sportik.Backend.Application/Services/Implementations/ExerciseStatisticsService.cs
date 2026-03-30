@@ -26,7 +26,7 @@ internal sealed class ExerciseStatisticsService : IExerciseStatisticsService
         CancellationToken cancellationToken = default)
     {
         IEnumerable<IGrouping<DateTime, ExerciseStatistics>> groupedStatistics = await _exerciseStatisticsRepository
-            .GetAllAsync(userId, set => set.LoggedAt.ToOffset(offset).Date, cancellationToken);
+            .GetAllAsync(userId, offset, set => set.LoggedAt.ToOffset(offset).Date, cancellationToken);
 
         IEnumerable<DayStatistics> dayStatistics = groupedStatistics
             .Select(group => new DayStatistics
