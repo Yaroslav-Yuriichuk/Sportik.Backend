@@ -1,7 +1,7 @@
 ﻿services:
 
   backend:
-    image: yyuriichuk/sportik-backend:1.0.1
+    image: yyuriichuk/sportik-backend:2.0.0
     container_name: sportik-backend
     restart: unless-stopped
     ports:
